@@ -1,0 +1,615 @@
+{
+  "bear_01.jpg": {
+    "subject": "brown bear",
+    "category": "animal",
+    "attributes": [
+      "brown fur",
+      "sitting posture",
+      "large body",
+      "fluffy fur",
+      "outdoors"
+    ],
+    "caption": "A large brown bear sits comfortably on the grassy ground looking off to the side.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "bear_02.jpg": {
+    "subject": "grizzly bear",
+    "category": "animal",
+    "attributes": [
+      "brown fur",
+      "wet fur",
+      "thick coat",
+      "round ears",
+      "dark eyes",
+      "black snout"
+    ],
+    "caption": "A close-up portrait of a large brown bear looking directly forward.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "bear_03.jpg": {
+    "subject": "brown bear",
+    "category": "animal",
+    "attributes": [
+      "thick brown fur",
+      "large size",
+      "walking stance",
+      "forest background",
+      "backlit fur"
+    ],
+    "caption": "A large brown bear walks through a clearing with pine trees in the background.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "bear_04.jpg": {
+    "subject": "brown bear",
+    "category": "animal",
+    "attributes": [
+      "brown fur",
+      "standing on hind legs",
+      "open mouth",
+      "claws",
+      "rocky background"
+    ],
+    "caption": "A brown bear stands on its hind legs with its mouth open wide in a natural display setting.",
+    "confidence": 0.95,
+    "low_confidence": false
+  },
+  "bear_05.jpg": {
+    "subject": "brown bear",
+    "category": "animal",
+    "attributes": [
+      "thick brown fur",
+      "large body",
+      "rounded ears",
+      "walking",
+      "outdoor foliage"
+    ],
+    "caption": "A large brown bear walks through a grassy area surrounded by dark foliage.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "bear_06.jpg": {
+    "subject": "grizzly bear",
+    "category": "animal",
+    "attributes": [
+      "brown fur",
+      "wet fur",
+      "standing",
+      "grassy slope",
+      "evergreen trees",
+      "mountain background"
+    ],
+    "caption": "A brown bear stands on a grassy hillside framed by pine trees against a misty mountain background.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "bear_07.jpg": {
+    "subject": "brown bear",
+    "category": "animal",
+    "attributes": [
+      "brown fur",
+      "shaggy wet coat",
+      "sitting posture",
+      "sharp claws",
+      "outdoors"
+    ],
+    "caption": "A large brown bear with shaggy fur sits upright on a dirt ground surrounded by grass.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "deer_01.jpg": {
+    "subject": "white-tailed deer",
+    "category": "animal",
+    "attributes": [
+      "antlers",
+      "brown fur",
+      "standing",
+      "golden hour lighting",
+      "alert pose",
+      "outdoor field"
+    ],
+    "caption": "A white-tailed buck stands gracefully in a grassy field lit by warm golden sunlight.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "deer_02.jpg": {
+    "subject": "mule deer fawn",
+    "category": "animal",
+    "attributes": [
+      "spotted coat",
+      "large ears",
+      "brown fur",
+      "standing outdoors",
+      "grassy meadow"
+    ],
+    "caption": "A young spotted mule deer fawn stands in a grassy field and looks toward the camera.",
+    "confidence": 0.95,
+    "low_confidence": false
+  },
+  "deer_03.jpg": {
+    "subject": "bull elk",
+    "category": "animal",
+    "attributes": [
+      "large branched antlers",
+      "brown body coat",
+      "dark brown neck mane",
+      "standing pose",
+      "foggy background",
+      "low shrubs in foreground"
+    ],
+    "caption": "A large bull elk with impressive antlers stands on a grassy hilltop against a foggy, overcast sky.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "deer_04.jpg": {
+    "subject": "red deer stag",
+    "category": "animal",
+    "attributes": [
+      "large branching antlers",
+      "brown fur",
+      "profile view",
+      "standing position",
+      "grassy clearing",
+      "forest background"
+    ],
+    "caption": "A majestic red deer stag with impressive large antlers stands in a grassy field near a forest.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "deer_05.jpg": {
+    "subject": "mule deer",
+    "category": "animal",
+    "attributes": [
+      "antlers",
+      "large ears",
+      "dark forehead patch",
+      "brown fur",
+      "lying on grass"
+    ],
+    "caption": "A young mule deer buck with small antlers rests calmly on green grass while looking directly into the camera.",
+    "confidence": 0.95,
+    "low_confidence": false
+  },
+  "deer_06.jpg": {
+    "subject": "sika deer",
+    "category": "animal",
+    "attributes": [
+      "velvet antlers",
+      "spotted brown fur",
+      "standing",
+      "looking upwards",
+      "wooded background"
+    ],
+    "caption": "A young male sika deer with velvet antlers tilts its head up while standing in a forest clearing.",
+    "confidence": 0.95,
+    "low_confidence": false
+  },
+  "deer_07.jpg": {
+    "subject": "bull elk",
+    "category": "animal",
+    "attributes": [
+      "large antlers",
+      "ear tag",
+      "brown fur",
+      "outdoors",
+      "cloudy sky"
+    ],
+    "caption": "A close-up portrait of a tagged bull elk featuring large, intricate antlers standing in a field.",
+    "confidence": 0.95,
+    "low_confidence": false
+  },
+  "dog_01.jpg": {
+    "subject": "Jack Russell Terrier",
+    "category": "animal",
+    "attributes": [
+      "tricolor coat",
+      "black head with tan eyebrows",
+      "white line on forehead",
+      "floppy ears",
+      "expressive brown eyes",
+      "pink studio background"
+    ],
+    "caption": "A close-up studio portrait of a tricolor Jack Russell Terrier looking directly at the camera against a soft pink background.",
+    "confidence": 0.95,
+    "low_confidence": false
+  },
+  "dog_02.jpg": {
+    "subject": "beagle",
+    "category": "animal",
+    "attributes": [
+      "floppy ears",
+      "pink tongue",
+      "open mouth",
+      "brown white and black fur",
+      "black collar",
+      "close-up portrait"
+    ],
+    "caption": "A cheerful beagle looks directly at the camera with its tongue out in a close-up portrait.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "dog_04.jpg": {
+    "subject": "English Cocker Spaniel",
+    "category": "animal",
+    "attributes": [
+      "golden coat",
+      "floppy ears spread out",
+      "lying on back",
+      "white chest fur",
+      "open mouth with tongue out",
+      "happy expression",
+      "green grass background"
+    ],
+    "caption": "A playful golden English Cocker Spaniel lies on its back in the grass with its floppy ears spread out wide and tongue hanging out.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "dog_07.jpg": {
+    "subject": "yellow Labrador Retriever puppy",
+    "category": "animal",
+    "attributes": [
+      "yellow coat",
+      "floppy ears",
+      "blue patterned collar",
+      "looking up",
+      "sitting pose",
+      "dark studio background"
+    ],
+    "caption": "A young yellow Labrador puppy sits attentively looking upwards against a dark studio background.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "dog_08.jpg": {
+    "subject": "golden retriever puppy",
+    "category": "animal",
+    "attributes": [
+      "fluffy golden fur",
+      "dark brown eyes",
+      "colorful collar",
+      "floppy ears",
+      "sitting on green grass"
+    ],
+    "caption": "A cute fluffy golden retriever puppy wearing a colorful collar sitting on green grass and looking up at the camera.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "dog_09.jpg": {
+    "subject": "Pembroke Welsh Corgi",
+    "category": "animal",
+    "attributes": [
+      "fawn and white coat",
+      "erect ears",
+      "open mouth",
+      "tongue out",
+      "lying down",
+      "white background"
+    ],
+    "caption": "A happy Pembroke Welsh Corgi lies down on a plain white studio background with its tongue panting out.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "dog_10.jpg": {
+    "subject": "golden retriever",
+    "category": "animal",
+    "attributes": [
+      "golden fur",
+      "open mouth",
+      "pink tongue",
+      "brown eyes",
+      "floppy ears",
+      "blue studio background"
+    ],
+    "caption": "A close-up studio portrait of a friendly golden retriever looking directly at the camera with its mouth open against a textured blue backdrop.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "fox_01.jpg": {
+    "subject": "red fox",
+    "category": "animal",
+    "attributes": [
+      "orange fur",
+      "pointed ears",
+      "bushy tail",
+      "white chest",
+      "standing on snow"
+    ],
+    "caption": "A red fox stands on a snowy ridge bathed in warm golden light.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "fox_03.jpg": {
+    "subject": "red fox",
+    "category": "animal",
+    "attributes": [
+      "reddish-orange fur",
+      "pointed ears",
+      "amber eyes",
+      "white chest markings",
+      "black paws",
+      "sitting posture"
+    ],
+    "caption": "A red fox sitting on the ground looking directly towards the camera.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "fox_02.jpg": {
+    "subject": "red fox",
+    "category": "animal",
+    "attributes": [
+      "reddish-orange fur",
+      "sleeping",
+      "curled up",
+      "black-tipped ears",
+      "white muzzle",
+      "tree roots"
+    ],
+    "caption": "A red fox lies curled up asleep amidst thick mossy tree roots.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "fox_04.jpg": {
+    "subject": "red fox",
+    "category": "animal",
+    "attributes": [
+      "orange fur",
+      "white chest",
+      "black legs",
+      "pointed ears",
+      "bushy tail",
+      "standing",
+      "wet asphalt"
+    ],
+    "caption": "A red fox stands on a wet paved road looking directly at the camera.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "fox_05.jpg": {
+    "subject": "red fox",
+    "category": "animal",
+    "attributes": [
+      "reddish-orange fur",
+      "pointed ears",
+      "golden eyes",
+      "white chin fur",
+      "whiskers",
+      "black nose"
+    ],
+    "caption": "A close-up portrait of a red fox with vibrant orange fur and alert golden eyes.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "fox_06.jpg": {
+    "subject": "red fox",
+    "category": "animal",
+    "attributes": [
+      "orange fur",
+      "snow covered face",
+      "pointed ears",
+      "whiskers",
+      "dark eyes"
+    ],
+    "caption": "A close-up portrait of a red fox with fresh snow dusted across its fur and face.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "fox_07.jpg": {
+    "subject": "red fox",
+    "category": "animal",
+    "attributes": [
+      "reddish-orange fur",
+      "bushy tail",
+      "pointed ears",
+      "black legs",
+      "alert posture",
+      "green grass"
+    ],
+    "caption": "A red fox sitting alertly on lush green grass in warm natural sunlight.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "landscape_01.jpg": {
+    "subject": "Seceda mountain",
+    "category": "landscape",
+    "attributes": [
+      "jagged mountain peaks",
+      "grassy slopes",
+      "steep cliffs",
+      "wildflowers",
+      "bright sunlight"
+    ],
+    "caption": "A foreground filled with colourful wildflowers looks out towards the dramatic jagged peaks of the Seceda ridge in the Dolomites.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "landscape_02.jpg": {
+    "subject": "mountain valley",
+    "category": "landscape",
+    "attributes": [
+      "lush green hills",
+      "sunburst",
+      "dramatic sky",
+      "mountain range",
+      "scenic view",
+      "sunset"
+    ],
+    "caption": "The bright sun bursts over rolling green mountain peaks into a peaceful alpine valley under a dramatic sky.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "landscape_03.jpg": {
+    "subject": "alpine mountain range",
+    "category": "landscape",
+    "attributes": [
+      "green slopes",
+      "rocky cliffs",
+      "distant peaks",
+      "cloudy sky",
+      "grassy ridges"
+    ],
+    "caption": "A breathtaking view of lush green alpine mountain ridges with distant hazy peaks under a cloudy sky.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "landscape_04.jpg": {
+    "subject": "Fairy Glen stone spiral",
+    "category": "landscape",
+    "attributes": [
+      "green grassy hills",
+      "stone spiral",
+      "dramatic sunset",
+      "rocky hilltops",
+      "cloudy sky"
+    ],
+    "caption": "A vibrant sunset glowing between grassy hills overlooking a stone spiral pattern at Fairy Glen on the Isle of Skye.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "landscape_05.jpg": {
+    "subject": "Yosemite Valley",
+    "category": "landscape",
+    "attributes": [
+      "granite mountains",
+      "pine trees",
+      "merced river",
+      "sunset glow",
+      "hazy sky",
+      "rocky stream"
+    ],
+    "caption": "A hazy sunset glows warmly over the majestic granite cliffs and pine forests of Yosemite Valley along a calm, rocky river.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "landscape_06.jpg": {
+    "subject": "coniferous forest trail",
+    "category": "landscape",
+    "attributes": [
+      "tall pine trees",
+      "dappled sunlight",
+      "dirt path",
+      "rocky ground",
+      "dense canopy",
+      "lush undergrowth"
+    ],
+    "caption": "A sunlit dirt path winds through a quiet, misty pine forest with tall trees.",
+    "confidence": 0.95,
+    "low_confidence": false
+  },
+  "landscape_07.jpg": {
+    "subject": "pine forest",
+    "category": "landscape",
+    "attributes": [
+      "tall pine trees",
+      "golden sunlight",
+      "sandy path",
+      "sloping grassy terrain",
+      "dense canopy"
+    ],
+    "caption": "Golden sunlight filters through tall trees onto a winding path in a quiet pine forest.",
+    "confidence": 0.95,
+    "low_confidence": false
+  },
+  "wolf_01.jpg": {
+    "subject": "grey wolf",
+    "category": "animal",
+    "attributes": [
+      "snarling",
+      "bared teeth",
+      "amber eyes",
+      "thick fur",
+      "open mouth",
+      "profile view",
+      "dark background"
+    ],
+    "caption": "A snarling grey wolf aggressively displays its sharp teeth against a dark moody background.",
+    "confidence": 0.95,
+    "low_confidence": false
+  },
+  "wolf_02.jpg": {
+    "subject": "grey wolf",
+    "category": "animal",
+    "attributes": [
+      "thick fur",
+      "pointed ears",
+      "piercing gaze",
+      "snowy ground",
+      "forest background"
+    ],
+    "caption": "A grey wolf walks through a snowy patch in a dark forest looking to the side.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "wolf_04.jpg": {
+    "subject": "grey wolf",
+    "category": "animal",
+    "attributes": [
+      "grey and black fur",
+      "intense yellow eyes",
+      "pointed ears",
+      "black nose",
+      "close-up portrait",
+      "dark background"
+    ],
+    "caption": "A close-up portrait of a grey wolf staring directly forward against a dark background.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "wolf_05.jpg": {
+    "subject": "grey wolf",
+    "category": "animal",
+    "attributes": [
+      "yellow eyes",
+      "intense gaze",
+      "grey and tan fur",
+      "pointed ears",
+      "green foliage"
+    ],
+    "caption": "A grey wolf with piercing yellow eyes looks directly forward from behind green plants.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "wolf_06.jpg": {
+    "subject": "gray wolf",
+    "category": "animal",
+    "attributes": [
+      "amber eyes",
+      "thick fur",
+      "pointed ears",
+      "grey and white fur",
+      "intense gaze"
+    ],
+    "caption": "A close-up portrait of a gray wolf with striking amber eyes looking directly forward.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "wolf_07.jpg": {
+    "subject": "coyote",
+    "category": "animal",
+    "attributes": [
+      "grey and tawny fur",
+      "pointed ears",
+      "standing posture",
+      "alert expression",
+      "forest background"
+    ],
+    "caption": "A lone coyote stands at the edge of a forest, gazing directly at the camera.",
+    "confidence": 0.95,
+    "low_confidence": false
+  },
+  "wolf_03.jpg": {
+    "subject": "grey wolf",
+    "category": "animal",
+    "attributes": [
+      "thick grey fur",
+      "piercing eyes",
+      "pointed ears",
+      "black nose",
+      "snowy background",
+      "golden sunlight"
+    ],
+    "caption": "A close-up portrait of a grey wolf in a snowy forest bathed in warm sunlight.",
+    "confidence": 0.98,
+    "low_confidence": false
+  }
+}
