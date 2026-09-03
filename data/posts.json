@@ -1,0 +1,100 @@
+[
+  {
+    "id": "post_01",
+    "title": "The Secret Life of Red Foxes",
+    "body": "Red foxes, known scientifically as Vulpes vulpes, are among the most adaptable wild canids in the world. Found across forests, grasslands, and even urban areas, these cunning hunters rely on sharp hearing and a keen sense of smell to track down small prey like rodents and rabbits.",
+    "expected_category": "animal",
+    "expected_subject": "fox"
+  },
+  {
+    "id": "post_02",
+    "title": "Wild Fox Species Around the Globe",
+    "body": "From the Arctic fox to the fennec fox, wild fox species have adapted to some of the harshest environments on Earth. This post explores how different fox species have evolved unique traits suited to their habitats, from thick insulating fur to oversized ears for heat dissipation.",
+    "expected_category": "animal",
+    "expected_subject": "fox"
+  },
+  {
+    "id": "post_03",
+    "title": "The Behavior of Red Foxes",
+    "body": "Red foxes are largely solitary and territorial animals, marking their range with scent and vocalizing to communicate with nearby foxes. Their behavior shifts seasonally, becoming more social during mating season before returning to solitary hunting patterns.",
+    "expected_category": "animal",
+    "expected_subject": "fox"
+  },
+  {
+    "id": "post_04",
+    "title": "Understanding Gray Wolf Packs",
+    "body": "Gray wolves, or Canis lupus, live in tightly organized family packs led by a breeding pair. Pack structure governs everything from hunting strategy to territory defense, and understanding wolf social behavior has reshaped how conservationists approach wolf reintroduction programs.",
+    "expected_category": "animal",
+    "expected_subject": "wolf"
+  },
+  {
+    "id": "post_05",
+    "title": "Wolves of the Northern Forests",
+    "body": "In the dense forests of the northern hemisphere, wolves remain one of the most efficient apex predators. Their coordinated hunting behavior allows them to take down prey many times their individual size, a skill honed over thousands of years of pack evolution.",
+    "expected_category": "animal",
+    "expected_subject": "wolf"
+  },
+  {
+    "id": "post_06",
+    "title": "Brown Bears and Their Forest Habitat",
+    "body": "Brown bears are powerful omnivores found throughout North America, Europe, and Asia. Their diet shifts with the seasons, from spring roots and grasses to salmon runs in late summer, making them one of the most opportunistic feeders in the animal kingdom.",
+    "expected_category": "animal",
+    "expected_subject": "bear"
+  },
+  {
+    "id": "post_07",
+    "title": "How Bears Prepare for Hibernation",
+    "body": "As autumn approaches, bears enter a period of hyperphagia, consuming enormous quantities of food to build fat reserves for winter. This physiological adaptation allows them to survive months without eating, drinking, or eliminating waste while denned up.",
+    "expected_category": "animal",
+    "expected_subject": "bear"
+  },
+  {
+    "id": "post_08",
+    "title": "Deer in the Autumn Woods",
+    "body": "As temperatures drop and leaves change color, deer become more active during dawn and dusk, foraging heavily to prepare for winter scarcity. Their keen senses and cautious movement patterns make them a favorite subject for wildlife photographers.",
+    "expected_category": "animal",
+    "expected_subject": "deer"
+  },
+  {
+    "id": "post_09",
+    "title": "The Grace of Wild Deer",
+    "body": "Few animals capture the quiet elegance of the forest quite like deer. Their slender legs and alert posture reflect a life built around vigilance, always ready to bound away at the first sign of danger.",
+    "expected_category": "animal",
+    "expected_subject": "deer"
+  },
+  {
+    "id": "post_10",
+    "title": "Domestic Dogs: Our Oldest Companions",
+    "body": "Dogs were the first animals domesticated by humans, with a relationship stretching back tens of thousands of years. From working breeds bred for herding and guarding to companion breeds bred purely for affection, dogs have diversified into an astonishing range of forms.",
+    "expected_category": "animal",
+    "expected_subject": "dog"
+  },
+  {
+    "id": "post_11",
+    "title": "Training Tips for a Happy Dog",
+    "body": "Positive reinforcement remains the gold standard for dog training, rewarding good behavior rather than punishing mistakes. Consistency, patience, and short daily sessions tend to produce far better results than infrequent, lengthy training attempts.",
+    "expected_category": "animal",
+    "expected_subject": "dog"
+  },
+  {
+    "id": "post_12",
+    "title": "Golden Hour in the Mountains",
+    "body": "There is something transformative about the last hour of sunlight in the mountains, when the harsh midday light softens into warm golden tones. Ridgelines glow amber, valleys fill with shadow, and the entire landscape seems to slow down.",
+    "expected_category": "landscape",
+    "expected_subject": "landscape"
+  },
+  {
+    "id": "post_13",
+    "title": "Exploring Quiet Forest Trails",
+    "body": "Dense canopy filters sunlight into scattered pools across the forest floor, and the only sounds are birdsong and the crunch of leaves underfoot. These quiet trails offer a kind of stillness that's increasingly rare, making them ideal for slow, reflective hikes.",
+    "expected_category": "landscape",
+    "expected_subject": "landscape"
+  },
+  {
+    "id": "post_14",
+    "title": "The Behavior of Red Foxes (Mismatch Test)",
+    "body": "Red foxes, known scientifically as Vulpes vulpes, are solitary and highly territorial hunters found in forests and grasslands worldwide. This post exists specifically to test whether the system correctly rejects a gray wolf image as a candidate match, since foxes and wolves are both canids but distinct species.",
+    "expected_category": "animal",
+    "expected_subject": "fox"
+  }
+]
