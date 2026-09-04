@@ -27,3 +27,20 @@ def rank_images_for_post(post_id: str, post_embeddings: dict, image_embeddings: 
 
     scored.sort(key=lambda pair: pair[1], reverse=True)
     return scored[:top_k]
+
+def compute_dynamic_threshold(top_similarity: float, margin: float = 0.15) -> float:
+    """
+    Accept candidates within `margin` of this post's best similarity score,
+    rather than against a fixed global bar. Real data shows absolute cosine
+    scores vary a lot by post writing style (e.g. ~0.5-0.6 for visual/descriptive
+    posts vs ~0.2-0.3 for behavior/abstract posts like dog training), so a
+    single global threshold can't separate "good match" from "bad match"
+    across all posts. margin=0.15 is a starting point, pending validation
+    against a labeled eval set.
+    Known limitation: a fixed margin doesn't scale well for posts with low
+    top-similarity scores (e.g. dog posts), which can let same-category but
+    wrong-subject images (e.g. a wolf approved for a deer post) slip past.
+    _CONFUSABLE_PAIRS only guards a hand-picked set of pairs, not all
+    possible confusions. To be validated/tuned against a labeled eval set.
+    """
+    return max(0.0, top_similarity - margin)

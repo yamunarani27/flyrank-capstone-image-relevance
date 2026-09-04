@@ -1,5 +1,4 @@
 from enum import Enum
-from src.schema import LOW_CONFIDENCE_THRESHOLD
 from dataclasses import dataclass
 from src.schema import ImageMetadata, LOW_CONFIDENCE_THRESHOLD
 
@@ -26,8 +25,12 @@ def _is_known_confusable(expected_subject: str, candidate_subject: str) -> bool:
     a, b = _normalize_subject(expected_subject), _normalize_subject(candidate_subject)
     if a == b:
         return False
-    return frozenset({a, b}) in _CONFUSABLE_PAIRS
-
+    for pair in _CONFUSABLE_PAIRS:
+        x, y = tuple(pair)
+        if (x in a or x in b) and (y in a or y in b):
+            return True
+    return False
+    
 @dataclass(frozen=True)
 class GuardResult:
     decision: Decision
@@ -46,6 +49,7 @@ def evaluate_match(
     post_expected_subject: str,
     candidate: ImageMetadata,
     similarity: float,
+    similarity_threshold: float = SIMILARITY_THRESHOLD,
 ) -> GuardResult:
     category_match = candidate.category.value == post_expected_category
 
@@ -90,7 +94,7 @@ def evaluate_match(
             category_match=True,
         )
 
-    if similarity < SIMILARITY_THRESHOLD:
+    if similarity < similarity_threshold:
         return GuardResult(
             decision=Decision.NO_CONFIDENT_MATCH,
             reason=(
