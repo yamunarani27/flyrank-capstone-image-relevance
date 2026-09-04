@@ -14,6 +14,7 @@ _CONFUSABLE_PAIRS: set[frozenset[str]] = {
     frozenset({"red fox", "gray wolf"}),
     frozenset({"fox", "wolf"}),
     frozenset({"dog", "wolf"}),
+    frozenset({"deer", "wolf"}),
 }
 
 
