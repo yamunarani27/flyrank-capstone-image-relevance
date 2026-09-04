@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from embeddings import get_embedding
+from src.embeddings import get_embedding
 
 TAGGED_IMAGES_PATH = "data/tagged_images.json"
 IMAGE_EMBEDDINGS_PATH = "data/image_embeddings.json"

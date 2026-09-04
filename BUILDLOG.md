@@ -68,3 +68,82 @@ reconstructed afterward.
 - Confirmed one related case is still open, not fixed by the above: on the same full rerun, `wolf_03.jpg` (similarity 0.48) remains `approved` under "Deer in the Autumn Woods." This is not the same bug — `deer`/`wolf` was never added to `_CONFUSABLE_PAIRS` in the first place, so there was
   nothing for the substring fix to catch. Left open deliberately rather than guessing and adding more pairs ad hoc; whether to expand `_CONFUSABLE_PAIRS` further or address this via the threshold/margin formula is a decision for the labeled eval set, not a guess.
 
+## Phase 4 — Eval set
+
+- Built `data/eval/build_labels.py` to auto-generate ground truth
+  (`data/eval/labels.json`) for the eval set. First version matched each
+  post's `expected_subject` as a substring against tagged image captions
+  (`subject` field) — this silently produced 0 correct images for every dog
+  and landscape post, since breed-level captions ("golden retriever puppy")
+  and named-location captions ("Yosemite Valley") never literally contain
+  the words "dog" or "landscape". Fixed by matching on the corpus's own
+  filename prefix convention (`dog_*.jpg`, `landscape_*.jpg`) instead of
+  free-text caption content — every post now maps to a full 7-image
+  ground-truth set.
+
+- Ran `run_eval.py`: top-1 precision came back 14/14 (100%) on the first
+  try — ranking quality across all 6 categories holds up against labeled
+  ground truth, not just spot-checked posts.
+
+- First version of the mismatch-rejection eval used the guard's default
+  global `SIMILARITY_THRESHOLD` (0.75) directly, which is not what the
+  system actually uses in production (`run_matching.py` computes a dynamic
+  per-post threshold). This made the deer/wolf gap disappear artificially —
+  0.48 similarity is below a 0.75 bar but above the real dynamic threshold
+  of 0.427. Fixed by having the eval compute and pass the same dynamic
+  threshold the production path uses, so the eval measures actual system
+  behavior, not a stricter hypothetical.
+
+- Expanded the mismatch test from 3 cases to all 10 same-category
+  (animal) pairings (fox/wolf/bear/deer/dog cross-checked), one
+  representative post and image per species. First expanded run showed
+  10/10 rejected — but on inspection, the entry meant to re-test the known
+  deer/wolf gap had accidentally swapped both the direction (wolf post vs
+  deer image, not deer post vs wolf image) and the specific image used, so
+  it wasn't actually re-testing the original failure — similarity is not
+  symmetric across post direction, nor uniform across individual images of
+  the same species. Added the exact original case back in explicitly
+  (`post_08` vs `wolf_03.jpg`), which correctly still failed:
+  `[APPROVED (FAIL)]`, similarity 0.48, at an 11-case rejection rate of
+  10/11 (90.9%).
+
+- Added `deer`/`wolf` to `_CONFUSABLE_PAIRS`. Reran the full 11-case
+  mismatch eval: 11/11 (100%). Reran `tests/test_guard.py`: all existing
+  tests still pass.
+
+- Final numbers: top-1 precision 100% (14/14), mismatch rejection 100%
+  (11/11 same-category pairs tested).
+
+## Postgres via Docker
+
+- `docker compose up -d` failed on first attempt: `error getting
+  credentials - err: exec: "docker-credential-desktop": executable file
+  not found in %PATH%`. A known Docker Desktop-on-Windows issue, unrelated
+  to this project's config — the `credsStore` entry in
+  `~/.docker/config.json` pointed at a credential helper binary not on
+  PATH. Since the only image being pulled (`postgres:16-alpine`) is public
+  and needs no authentication, removed the `credsStore` line entirely
+  rather than trying to fix the missing binary. Container started cleanly
+  afterward.
+
+- Wrote `db/schema.sql` matching the entities already defined in
+  `design_doc.md` back in Phase 1 (`images`, `image_embeddings`, `posts`,
+  `post_embeddings`, `suggestions`, `cost_log`, `batch_jobs`), with indexes on the columns actually queried (category, subject, post_id/image_id on suggestions, review_status). Mounted it via
+  `docker-entrypoint-initdb.d` so it runs automatically on first container
+  init — confirmed via `\dt` that all 7 tables were created without a
+  separate manual migration-tool step.
+
+- Wrote `src/migrate_json_to_db.py` to load the existing JSON files
+  (`tagged_images.json`, `posts.json`, `image_embeddings.json`,
+  `post_embeddings.json`) into the new tables. Used `ON CONFLICT DO
+  NOTHING` on natural unique keys (`images.file_path`,
+  `posts.external_id`) so re-running the script is safe, though it won't
+  update already-migrated rows. Ran cleanly on the first attempt: 42
+  images, 14 posts, 42 image embeddings, 14 post embeddings migrated with
+  zero skipped rows — confirms the file-path/external-id join between the
+  embeddings files and the newly-inserted image/post rows worked correctly.
+
+- `data/eval/labels.json` deliberately was not migrated to a table — it's
+  the hand-verified eval ground truth used by `run_eval.py` to score the
+  system, not part of the production data model in `design_doc.md`.
+  Kept as a JSON file in `data/eval/`.

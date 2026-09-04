@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from embeddings import get_embedding
+from src.embeddings import get_embedding
 
 POSTS_PATH = "data/posts.json"
 POST_EMBEDDINGS_PATH = "data/post_embeddings.json"
