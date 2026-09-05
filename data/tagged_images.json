@@ -1,18 +1,4 @@
 {
-  "bear_01.jpg": {
-    "subject": "brown bear",
-    "category": "animal",
-    "attributes": [
-      "brown fur",
-      "sitting posture",
-      "large body",
-      "fluffy fur",
-      "outdoors"
-    ],
-    "caption": "A large brown bear sits comfortably on the grassy ground looking off to the side.",
-    "confidence": 0.98,
-    "low_confidence": false
-  },
   "bear_02.jpg": {
     "subject": "grizzly bear",
     "category": "animal",
@@ -609,6 +595,20 @@
       "golden sunlight"
     ],
     "caption": "A close-up portrait of a grey wolf in a snowy forest bathed in warm sunlight.",
+    "confidence": 0.98,
+    "low_confidence": false
+  },
+  "bear_01.jpg": {
+    "subject": "grizzly bear",
+    "category": "animal",
+    "attributes": [
+      "light brown fur",
+      "sitting upright",
+      "thick coat",
+      "large paws",
+      "outdoors"
+    ],
+    "caption": "A large light brown grizzly bear sitting comfortably upright on the grass.",
     "confidence": 0.98,
     "low_confidence": false
   }

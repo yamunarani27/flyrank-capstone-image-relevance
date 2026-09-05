@@ -32,3 +32,13 @@ def get_cursor():
     with get_connection() as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             yield cur
+
+def log_cost(call_type: str, reference: str, input_tokens: int, output_tokens: int, cost_usd: float) -> None:
+    with get_cursor() as cur:
+        cur.execute(
+            """
+            INSERT INTO cost_log (call_type, reference, input_tokens, output_tokens, cost_usd)
+            VALUES (%s, %s, %s, %s, %s)
+            """,
+            (call_type, reference, input_tokens, output_tokens, cost_usd),
+        )

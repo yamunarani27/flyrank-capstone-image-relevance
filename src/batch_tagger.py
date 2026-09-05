@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from src.vision_client import tag_image_with_retry, cost_log
 from src.schema import ImageMetadata
 import time,json
+from src.db import log_cost
 
 def discover_images(image_dir: Path) -> list[Path]:
     extensions = {".jpg", ".jpeg", ".png"}
@@ -35,6 +36,15 @@ def run_batch_tagging(image_dir: Path, results_path: Path = Path("data/tagged_im
             metadata = tag_image_with_retry(image_path)
             save_result(results_path, image_path.name, metadata)
             results.append(TaggingResult(image_path=image_path, metadata=metadata, error=None))
+
+            latest_entry = cost_log.entries[-1]
+            log_cost(
+                call_type=latest_entry.call_type,
+                reference=latest_entry.target,
+                input_tokens=latest_entry.input_tokens,
+                output_tokens=latest_entry.output_tokens,
+                cost_usd=latest_entry.cost_usd,
+            )
         except Exception as e:
             print(f"  SKIPPED {image_path.name}: {e}")
             results.append(TaggingResult(image_path=image_path, metadata=None, error=str(e)))
@@ -55,3 +65,6 @@ def save_result(results_path: Path, image_name: str, metadata: ImageMetadata) ->
     results[image_name] = metadata.model_dump()
     with open(results_path, "w") as f:
         json.dump(results, f, indent=2)
+
+if __name__ == "__main__":
+    run_batch_tagging(Path("data/images"))
