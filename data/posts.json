@@ -96,5 +96,12 @@
     "body": "Red foxes, known scientifically as Vulpes vulpes, are solitary and highly territorial hunters found in forests and grasslands worldwide. This post exists specifically to test whether the system correctly rejects a gray wolf image as a candidate match, since foxes and wolves are both canids but distinct species.",
     "expected_category": "animal",
     "expected_subject": "fox"
-  }
+  },
+  {
+    "id": "post_15",
+    "title": "Understanding Domestic Cat Behavior",
+    "body": "Cats communicate through a complex mix of vocalizations, body language, and scent marking. Purring, tail position, and ear orientation all carry distinct meaning, and reading them correctly is key to understanding what a cat actually wants.",
+    "expected_category": "animal",
+    "expected_subject": "cat"
+}
 ]

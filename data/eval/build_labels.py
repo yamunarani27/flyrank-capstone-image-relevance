@@ -48,7 +48,8 @@ def build_labels():
 
     print(f"Built {OUTPUT_PATH} with {len(labels)} posts.")
     for post_id, entry in labels.items():
-        print(f"  {post_id}: {len(entry['correct_images'])} correct image(s) — {entry['title']}")
+        note = " (intentionally no match — excluded from precision)" if not entry["correct_images"] else ""
+        print(f"  {post_id}: {len(entry['correct_images'])} correct image(s) — {entry['title']}{note}")
 
 
 if __name__ == "__main__":

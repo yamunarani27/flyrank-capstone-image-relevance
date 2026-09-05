@@ -180,5 +180,10 @@
       "fox_06.jpg",
       "fox_07.jpg"
     ]
+  },
+  "post_15": {
+    "title": "Understanding Domestic Cat Behavior",
+    "expected_subject": "cat",
+    "correct_images": []
   }
 }

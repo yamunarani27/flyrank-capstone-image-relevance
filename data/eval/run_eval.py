@@ -51,6 +51,8 @@ def compute_top1_precision():
     misses = []
 
     for post_id, entry in labels.items():
+        if not entry["correct_images"]:
+            continue
         ranked = rank_images_for_post(post_id, post_embeddings, image_embeddings, top_k=1)
         top_image_id = ranked[0][0]
         total += 1
@@ -77,6 +79,7 @@ def compute_mismatch_rejection_rate():
     with open(TAGGED_IMAGES_PATH, "r", encoding="utf-8") as f:
         tagged_images = json.load(f)
 
+    all_subjects=[data["subject"] for data in tagged_images.values()]
     post_embeddings = load_embeddings("data/post_embeddings.json")
     image_embeddings = load_embeddings("data/image_embeddings.json")
 
@@ -104,6 +107,7 @@ def compute_mismatch_rejection_rate():
             candidate=candidate,
             similarity=similarity,
             similarity_threshold=dynamic_threshold,
+            all_subjects=all_subjects,
         )
 
         status = "REJECTED" if not result.approved else "APPROVED (FAIL)"
