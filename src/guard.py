@@ -31,7 +31,21 @@ def _is_known_confusable(expected_subject: str, candidate_subject: str) -> bool:
         if (x in a or x in b) and (y in a or y in b):
             return True
     return False
-    
+
+def _subject_exists_in_corpus(expected_subject: str, all_subjects: list[str]) -> bool:
+    """
+    Checks whether any tagged image's subject even loosely matches the
+    post's expected subject (substring, case-insensitive). If the corpus
+    genuinely has zero images of the requested subject (e.g. a "cat" post
+    when only fox/wolf/bear/deer/dog/landscape were tagged), similarity
+    scores between the post and any image are meaningless noise — no
+    threshold can distinguish "no cat exists" from "a low-similarity dog
+    image happened to be the least-bad option." This check catches that
+    case directly, independent of similarity.
+    """
+    expected = _normalize_subject(expected_subject)
+    return any(expected in _normalize_subject(s) for s in all_subjects)
+
 @dataclass(frozen=True)
 class GuardResult:
     decision: Decision
@@ -51,7 +65,22 @@ def evaluate_match(
     candidate: ImageMetadata,
     similarity: float,
     similarity_threshold: float = SIMILARITY_THRESHOLD,
+    all_subjects: list[str] | None = None,
 ) -> GuardResult:
+    if all_subjects is not None and not _subject_exists_in_corpus(post_expected_subject, all_subjects):
+        return GuardResult(
+            decision=Decision.NO_CONFIDENT_MATCH,
+            reason=(
+                f"No confident match: no images tagged with a subject "
+                f"matching '{post_expected_subject}' exist in the corpus. "
+                f"Closest candidate was '{candidate.subject}', but similarity "
+                f"scores against an entirely absent subject are not "
+                f"meaningful evidence of a real match."
+            ),
+            similarity=similarity,
+            image_confidence=candidate.confidence,
+            category_match=False,
+        )
     category_match = candidate.category.value == post_expected_category
 
     if not category_match:
