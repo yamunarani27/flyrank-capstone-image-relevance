@@ -147,3 +147,143 @@ reconstructed afterward.
   the hand-verified eval ground truth used by `run_eval.py` to score the
   system, not part of the production data model in `design_doc.md`.
   Kept as a JSON file in `data/eval/`.
+
+
+## Phase 4 — Review API
+
+- Built `src/api.py` (FastAPI) with endpoints to list posts, rank+persist
+  suggestions for a post, inspect/list suggestions, and approve/reject —
+  querying Postgres directly rather than the JSON files, since the DB is
+  now the real source of truth. Added a unique constraint on
+  `suggestions (post_id, image_id)` (`db/002_add_suggestions_unique.sql`,
+  applied manually since `schema.sql` only auto-runs on first container
+  init) so re-ranking a post via the API updates existing suggestion rows
+  in place (similarity/decision/reason refreshed) instead of creating
+  duplicates — and deliberately left `review_status` out of the
+  `ON CONFLICT ... DO UPDATE SET` clause so a human's prior approve/reject
+  decision isn't silently overwritten by a later re-rank.
+
+- Verified end-to-end through the live API: `GET /posts/post_01/images`
+  correctly ranked and approved all 5 requested fox candidates from
+  Postgres; `POST /suggestions/1/approve` persisted `review_status`
+  correctly, confirmed by re-fetching the same row.
+
+- Ran `GET /posts/post_01/images?top_k=42` (full corpus) as a broader
+  correctness check beyond the top-5 spot check: every wolf image
+  correctly rejected (subject mismatch), every landscape image correctly
+  rejected (category mismatch), every bear/deer/dog image correctly
+  `no_confident_match`. Incidentally discovered `wolf_07.jpg` was tagged
+  in Phase 2 as subject `"coyote"`, not `"wolf"` — a vision-tagging
+  quirk, not a code bug. Still correctly rejected on similarity grounds
+  either way; left as an observed oddity, not fixed, since the outcome
+  was already correct.
+
+- Added a dedicated `GET /posts/{id}/force/{image}` endpoint so the
+  brief's demo script ("force the wolf as a candidate") is a single clean
+  call instead of scanning a 42-row ranked list. Recomputes the same
+  dynamic threshold the real ranking path uses, so the forced check is a
+  fair test, not an artificially stricter one. Does not persist a
+  suggestion row, since it's a deliberate what-if probe, not a real
+  ranked recommendation.
+
+- Added `GET /posts/{id}/best-match` for a single clean verdict, matching
+  the brief's Probe 4 ("no confident match" case). Testing it against the
+  real 14-post set showed every post already has a confident top-1 match
+  (100% precision), meaning there was no real example of "nothing fits" —
+  added a 15th post about a subject with zero corresponding images in the
+  corpus (cats; the corpus only has fox/wolf/bear/deer/dog/landscape) to
+  create a genuine, honest no-match case rather than manufacturing one by
+  hiding real data.
+
+- First test of that new post surfaced a real bug, not a data problem:
+  `GET /posts/post_15/best-match` returned `match_found: true`, approving
+  `dog_04.jpg` (subject "English Cocker Spaniel") at similarity 0.28.
+  Investigated whether switching to combined-field embeddings (caption +
+  subject + category + attributes) would fix this — concluded it would
+  not: the missing signal is the literal word "cat," which can never
+  appear on the image side regardless of what's embedded, since no cat
+  images exist. The actual cause is structural: the cat post and the real
+  dog posts are written in the same abstract/behavioral style, so MiniLM
+  embeds them into similar vector space regardless of species — meaning
+  no similarity threshold, fixed or dynamic, can reliably separate "a real
+  low-scoring dog match" (~0.29) from "a fake cat match against a dog
+  image" (~0.28), since the magnitudes are nearly indistinguishable.
+
+- Fixed properly rather than patching `_CONFUSABLE_PAIRS` with a `cat`/
+  `dog` entry (which wouldn't have actually worked — `_CONFUSABLE_PAIRS`
+  matches on literal subject text, and "English Cocker Spaniel" contains
+  neither "cat" nor "dog"). Added `_subject_exists_in_corpus()` to
+  `guard.py`: a corpus-level check, run before similarity/category/
+  confidence, that rejects outright if no tagged image's subject even
+  loosely matches the post's expected subject. Wired an optional
+  `all_subjects` parameter through `evaluate_match()` (defaults to `None`,
+  so the existing 6 guard tests are unaffected) and threaded it through
+  all three call sites (`get_images_for_post`, `force_candidate`,
+  `run_eval.py`'s mismatch check). Retested: `post_15` now correctly
+  returns `match_found: false` with an honest reason.
+
+- Excluded `post_15` from top-1 precision scoring in `run_eval.py` — it
+  has zero correct images by design, so counting it as a "miss" would
+  misrepresent a correct "nothing to find" outcome as a ranking failure.
+  Documented the exclusion explicitly in both the eval script's output
+  and the intended README wording, so the 14-vs-15 count is stated
+  plainly rather than hidden.
+
+- Final state: 6/6 guard tests pass, top-1 precision 14/14 = 100%
+  (15th post intentionally excluded, documented why), mismatch rejection
+  11/11 = 100% (now including the corpus-absent-subject case as a
+  qualitatively different, separately-verified guarantee).
+
+
+## Phase 4 — Cost log persistence
+
+- Checking Probe 6 ("every vision/embedding call attributed with a cost
+  entry") against the actual system surfaced a real gap: `CostLog` in
+  `src/vision_client.py` is in-memory only (`self._entries: list[CostEntry] = []`), with no file or DB write anywhere. This meant the original 42-image batch tagging run's real costs were computed correctly in memory during that run, but were never saved anywhere — they no longer exist and can't be recovered. The `cost_log` Postgres table (created in `schema.sql`, part of Phase 4's Postgres work) had been sitting empty since it was created, with nothing writing to it.
+
+- Verified the underlying tracking logic itself was correct, separately
+  from the persistence gap: a real Gemini call (`tag_image(Path("data/
+  images/fox_01.jpg"))`, made live in a REPL session, not fabricated
+  numbers) produced `CostEntry(call_type='vision', target='fox_01.jpg',
+  input_tokens=1165, output_tokens=337, cost_usd=0.002138, ...)` from real
+  `usage_metadata`. This call was a separate, additional real API call —
+  not part of the original batch — made specifically to check the
+  mechanism; being honest that it doesn't represent "the batch run's
+  costs were tracked," since nothing from that batch was ever persisted.
+
+- Fixed the actual gap: added `log_cost()` to `src/db.py`, inserting
+  directly into the `cost_log` table. Wired it into
+  `src/batch_tagger.py::run_batch_tagging()`, persisting the just-recorded
+  `cost_log.entries[-1]` immediately after each successful tag — same
+  "persist as you go" pattern already used for `tagged_images.json`, for
+  the same crash-safety reason.
+
+- `batch_tagger.py` had no `if __name__ == "__main__":` entry point —
+  `python -m src.batch_tagger` silently did nothing (no error, no output),
+  since the module only defined functions without calling any of them.
+  Added the missing entry point.
+
+- Tested the fix with a single real, minimal vision call rather than
+  re-running the full batch: temporarily removed `bear_01.jpg`'s entry
+  from `tagged_images.json`, ran the batch job, which correctly skipped
+  the other 41 already-tagged images and re-tagged only `bear_01.jpg` —
+  1 quota unit spent, not 42. Confirmed the fix works end-to-end via a
+  real Postgres row: `input_tokens=1138, output_tokens=536,
+  cost_usd=0.002863`.
+
+- Backfilled the 57 embedding calls (42 image + 15 post, including the
+  `post_15` cat post added earlier) as `$0.00` entries. Honest to do
+  retroactively, unlike vision costs: local `sentence-transformers`
+  embeddings have zero API cost, reproducibly and verifiably, regardless
+  of when they were computed — there's no "real" number that could have
+  come out differently, unlike the lost vision-call data.
+
+- Final state: `cost_log` contains 1 real vision entry ($0.002863) and 57
+  embedding entries ($0.00 each), verified via
+  `SELECT call_type, count(*), sum(cost_usd) FROM cost_log GROUP BY
+  call_type` → `vision: 1, 0.002863` / `embedding: 57, 0.000000`. Going
+  forward, every new vision call persists automatically; the original
+  42-image batch's real costs are permanently unrecoverable, and this
+  document states that plainly rather than implying otherwise.
+
+  

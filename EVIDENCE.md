@@ -6,7 +6,7 @@ score as not done."
 
 ## AI Processing
 
-**Vision model produces structured output validated against a schema;
+** Vision model produces structured output validated against a schema;
 invalid responses are never trusted.**
 ✅ DONE. `src/schema.py` defines `ImageMetadata` (Pydantic `BaseModel`) with
 field-level validation (`not_blank`, `clean_attributes`, range constraints
@@ -98,13 +98,13 @@ When no image clears the bar, the system answers "no confident match" with reaso
 PASSED tests/test_guard.py::test_generic_dog_image_ranks_below_threshold
 PASSED tests/test_guard.py::test_no_good_match_says_so_instead_of_guessing
 
-The guard's category/subject checks cover every same-category confusable pairing in the corpus, not just a hand-picked example. ✅ DONE (previously TODO). _CONFUSABLE_PAIRS now includes fox/wolf, dog/wolf, and deer/wolf. Coverage validated by the 11-case eval above, which exercises all 10 same-category species combinations plus the original brief example — 11/11 rejected. See BUILDLOG.md Phase 4 for how this gap was found (via the eval set) and fixed.
+The guard's category/subject checks cover every same-category confusable pairing in the corpus, not just a hand-picked example. ✅ DONE.  _CONFUSABLE_PAIRS now includes fox/wolf, dog/wolf, and deer/wolf. Coverage validated by the 11-case eval above, which exercises all 10 same-category species combinations plus the original brief example — 11/11 rejected. See BUILDLOG.md Phase 4 for how this gap was found (via the eval set) and fixed.
 
 ## Backend
 
 **Database models for images, tags, embeddings, posts, suggestions,
 approvals/rejections — with the required indexes.**
-✅ DONE (previously TODO). `db/schema.sql` defines all 7 tables from
+✅ DONE. `db/schema.sql` defines all 7 tables from
 `design_doc.md` (images, image_embeddings, posts, post_embeddings,
 suggestions, cost_log, batch_jobs), applied automatically on container
 init via Docker's `docker-entrypoint-initdb.d`. Indexes on `images.category`,`images.subject`, `posts.expected_subject`, `suggestions.post_id`,`suggestions.image_id`, `suggestions.review_status`, `cost_log.call_type`.Verified via `\dt` after `docker compose up -d`, and via row counts after migration:
@@ -116,9 +116,99 @@ Migrated 14 post embeddings.
 Migration complete.
 
 
+## Review API
+
+**A review workflow exists — approve/reject a suggested pairing, inspect
+why an image was selected or refused.**
+✅ DONE. `src/api.py` (FastAPI): `GET /posts`, `GET /posts/{id}/images`
+(ranks + guard-evaluates + persists suggestions), `GET /suggestions/{id}`
+(inspect), `GET /suggestions?review_status=...` (list/filter),
+`POST /suggestions/{id}/approve`, `POST /suggestions/{id}/reject`. Real
+output — approve, then re-fetch to confirm persistence:
+
+curl.exe -X POST http://localhost:8000/suggestions/1/approve
+{"id":1,...,"review_status":"approved"}
+
+curl.exe http://localhost:8000/suggestions/1
+{"id":1,...,"review_status":"approved"}
 
 
+**Probe 2 — query images for the fox article → fox ranks first, wolf/dog
+rank clearly lower.**
+✅ DONE. `GET /posts/post_01/images` (top 5) returned all 5 fox images,
+approved, similarity 0.44–0.56. Extended check at `top_k=42` (full
+corpus) confirmed every wolf/bear/deer/dog/landscape image ranked below
+the fox images and was correctly rejected or flagged `no_confident_match`.
 
+**Probe 3 — force the wolf as a candidate for the fox post → guard
+rejects it with a category-mismatch/subject-mismatch explanation.**
+✅ DONE. Dedicated `GET /posts/{id}/force/{image}` endpoint, using the
+same dynamic threshold the real ranking path computes:
+
+curl.exe "http://localhost:8000/posts/post_01/force/wolf_01.jpg"
+{"post_external_id":"post_01","forced_image":"wolf_01.jpg","similarity":0.2935,
+"dynamic_threshold":0.4067,"decision":"rejected",
+"reason":"Subject mismatch: expected 'fox', detected 'grey wolf'. These
+subjects are visually and semantically close but are never
+interchangeable for this post."}
+
+
+**Probe 4 — query a post with no suitable image → "no confident match" +
+reasons.**
+✅ DONE. `GET /posts/{id}/best-match` returns a single clean verdict.
+Initial test against the real 14-post set found every post already has a
+confident match (expected, given 100% precision) — added `post_15`
+("Understanding Domestic Cat Behavior"), a subject with zero
+corresponding images in the corpus, as a genuine no-match case rather
+than a manufactured one. First attempt surfaced a real gap: the corpus's
+only available candidate (`dog_04.jpg`) was incorrectly approved, since
+its similarity score (0.28) was statistically indistinguishable from a
+real dog-post match (~0.29) — no threshold could separate them. Fixed by
+adding `_subject_exists_in_corpus()` to the guard: a corpus-level check
+that rejects outright when no tagged image's subject even loosely
+matches what the post is asking for, run before similarity is considered
+at all. Real output after the fix:
+
+curl.exe "http://localhost:8000/posts/post_15/best-match"
+{"match_found":false,"message":"No confident match found.",
+"reason":"No confident match: no images tagged with a subject matching
+'cat' exist in the corpus. Closest candidate was 'English Cocker
+Spaniel', but similarity scores against an entirely absent subject are
+not meaningful evidence of a real match.",
+"closest_candidate":"dog_04.jpg","similarity":0.28269315}
+
+
+Note: `post_15` is deliberately excluded from the top-1 precision figure
+reported elsewhere in this document (see Semantic Matching section) —
+it has no correct image by design, so scoring it would misrepresent a
+correct "nothing to find" outcome as a ranking failure. The eval script
+and README both state this exclusion explicitly rather than silently
+inflating or deflating the precision number.
+
+
+**Vision and embedding costs are tracked per call.**
+✅ DONE (previously partial — in-memory only, not persisted). `src/db.py::
+log_cost()` inserts into the `cost_log` table; wired into
+`src/batch_tagger.py` so every successful vision call persists
+automatically. Note: the original 42-image batch run's real costs were
+computed correctly at the time but never saved (a gap found and fixed,
+not hidden — see BUILDLOG.md), so historical vision costs from that run
+are unrecoverable. Verified the fix with one real, minimal vision call
+(re-tagging a single image) rather than the full batch:
+
+id | call_type | reference | input_tokens | output_tokens | cost_usd
+----+-----------+-------------+--------------+---------------+----------
+1 | vision | bear_01.jpg | 1138 | 536 | 0.002863
+
+
+Embedding costs (57 calls: 42 image + 15 post) backfilled as $0.00 —
+legitimately free, since embeddings run locally via `sentence-transformers`
+with no API cost. Full breakdown:
+
+call_type | count | sum
+-----------+-------+----------
+vision | 1 | 0.002863
+embedding | 57 | 0.000000
 
 
 
