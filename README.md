@@ -49,6 +49,13 @@ Two parallel pipelines (vision tagging, embeddings) feed a shared Postgres schem
 - **Schema validation:** Pydantic
 - **Testing:** pytest
 
+
+> **Note:** `capstone.yaml`'s `run:` command assumes `.env` already exists
+> with real values (see step 3 below) — it does not create or populate
+> `.env` for you. Copy `.env.example` to `.env` and fill in a Gemini API
+> key before running `capstone.yaml`'s `run:` command or any setup step
+> below.
+
 ## Setup
 
 ### 1. Prerequisites

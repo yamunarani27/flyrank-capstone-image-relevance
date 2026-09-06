@@ -1,0 +1,91 @@
+# FlyRank Internship Capstone Manifest
+# AI Image Understanding & Content Matching Engine
+
+name: flyrank-capstone-image-relevance
+description: >
+  Matches blog posts to the right image from a tagged corpus using
+  vision tagging, semantic embeddings, and a mismatch guard that refuses
+  wrong pairings with an explanation.
+
+# One command that boots the whole system (Postgres + API).
+# Assumes .env is already configured from .env.example.
+run: |
+  docker compose up -d &&
+  python -m src.migrate_json_to_db &&
+  python -m src.backfill_embedding_costs &&
+  uvicorn src.api:app --port 8000
+
+# Loads the pre-tagged, pre-embedded corpus into a running Postgres
+# instance. Does not call the Gemini API or re-run embeddings — all
+# vision/embedding output is already committed to the repo as JSON.
+seed: |
+  python -m src.migrate_json_to_db &&
+  python -m src.backfill_embedding_costs
+
+# Runs the full automated test suite: guard unit tests, Review API
+# integration tests, and matching-accuracy regression tests against the
+# labeled eval set.
+test: pytest tests/ -v
+
+base_url: http://localhost:8000
+
+endpoints:
+  - method: GET
+    path: /posts
+    description: List all posts.
+
+  - method: GET
+    path: /posts/{external_id}/images
+    description: >
+      Rank images for a post by cosine similarity, evaluate each through
+      the mismatch guard, and persist the results as suggestions.
+      Query param top_k (default 5) controls how many candidates are
+      returned.
+    example: /posts/post_01/images?top_k=5
+
+  - method: GET
+    path: /posts/{external_id}/best-match
+    description: >
+      Single clean verdict for a post's best candidate — approved match,
+      or "no confident match" with a stated reason.
+    example: /posts/post_15/best-match
+
+  - method: GET
+    path: /posts/{external_id}/force/{image_file_path}
+    description: >
+      Force a specific image as a candidate for a specific post, bypassing
+      ranking — for demos and targeted probes (e.g. forcing a wolf image
+      onto a fox post). Does not persist a suggestion row.
+    example: /posts/post_01/force/wolf_01.jpg
+
+  - method: GET
+    path: /suggestions/{id}
+    description: Inspect a single suggestion, including its guard reasoning.
+
+  - method: GET
+    path: /suggestions
+    description: >
+      List suggestions, optionally filtered by review_status
+      (pending | approved | rejected).
+    example: /suggestions?review_status=pending
+
+  - method: POST
+    path: /suggestions/{id}/approve
+    description: Approve a suggestion.
+
+  - method: POST
+    path: /suggestions/{id}/reject
+    description: Reject a suggestion.
+
+eval:
+  script: python -m data.eval.run_eval
+  top1_precision: 1.00
+  mismatch_rejection_rate: 1.00
+  notes: >
+    Top-1 precision measured across 14 posts with real corpus
+    correspondences (fox, wolf, bear, deer, dog, landscape). A 15th post
+    (cat, no corresponding images in the corpus by design) is excluded
+    from this figure and used instead to verify the no-confident-match
+    path. Mismatch rejection measured across 11 cases: all 10 same-category
+    species pairings in the corpus plus the brief's original fox/wolf
+    example.
