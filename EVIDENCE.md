@@ -210,6 +210,18 @@ call_type | count | sum
 vision | 1 | 0.002863
 embedding | 57 | 0.000000
 
+**Automated tests cover schema validation, mismatch rejection, and
+matching accuracy.**
+✅ DONE. 18 tests total: `tests/test_guard.py` (6 — schema validation via
+`ImageMetadata`, mismatch rejection, confidence flagging), `tests/
+test_api.py` (10 — full Review API integration tests: ranking, force,
+best-match, approve/reject, 404 handling), `tests/test_matching_accuracy.py`
+(2 — regression floor at 90% for both top-1 precision and mismatch
+rejection, backed by the labeled eval set). All 18 pass:
+
+```
+18 passed, 1 warning in 1.76s
+```
 
 
 
