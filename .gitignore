@@ -1,6 +1,7 @@
 .env
-venv/
+.venv/
 __pycache__/
 *.pyc
 .vscode/
 scratch.py
+.pytest_cache/
