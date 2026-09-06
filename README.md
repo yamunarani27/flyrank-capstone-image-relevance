@@ -1,4 +1,4 @@
-# flyrank-capstone-imagerelevance
+# flyrank-capstone-image-relevance
 
 
 # AI Image Understanding & Content Matching Engine
